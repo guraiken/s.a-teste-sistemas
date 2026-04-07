@@ -1,9 +1,9 @@
-import "dotenv/config.js"
+import "dotenv/config"
 
 export const env = {
     host: process.env.HOST,
     database: process.env.DATABASE,
-    user: process.env.USER,
+    port: process.env.PORT,
     password: process.env.PASSWORD,
-    port: process.env.PORT
+    user: process.env.USER
 }

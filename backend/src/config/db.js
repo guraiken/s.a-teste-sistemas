@@ -1,5 +1,11 @@
-import { createPool } from "mysql2/promise.js"
+import {createPool} from "mysql2/promise.js";
 import { env } from "../env.js"
+
+console.log("Tentando conectar com:", {
+    host: env.host,
+    user: env.user,
+    database: env.database
+});
 
 const pool = createPool({
     host: env.host,
@@ -11,5 +17,6 @@ const pool = createPool({
     waitForConnections: true,
     queueLimit: 0
 })
+
 
 export default pool
