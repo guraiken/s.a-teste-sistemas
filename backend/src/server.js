@@ -1,8 +1,8 @@
 import cors from "cors"
 import express from "express"
-import routes from "./routes/routes.js"
 import pool from "./config/db.js"
 import { usuariosRoute } from "./routes/usuarios.js"
+import { carrosRoute } from "./routes/carros.js"
 
 
 const PORT = 3000
@@ -17,6 +17,7 @@ pool.on('error', (err, client) => {
 })
 
 app.use("/usuarios", usuariosRoute)
+app.use("/usuarios", carrosRoute)
 
 app.listen(PORT, ()=> {
     console.log("Rodando na porta: " + PORT)

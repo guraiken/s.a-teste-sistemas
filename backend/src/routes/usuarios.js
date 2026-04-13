@@ -1,4 +1,3 @@
-import pool from "../config/db.js";
 import express from "express"
 import { usuariosServices } from "../services/usuarios.js";
 
@@ -21,8 +20,8 @@ usuariosRoute.get('/:id', async (req,res) => {
     try {
         const {id} = req.params
         const [result] = await usuariosServices.getByID(id)
-        if(!result) return json.status(404).json("Não há nenhum usuário com o id correspondente")
-        else return json.status(200).json({data: result, message: "Usuário encontrado com sucesso!"})
+        if(!result) return res.status(404).json("Não há nenhum usuário com o id correspondente")
+        else return res.status(200).json({data: result, message: "Usuário encontrado com sucesso!"})
 
     } catch (error) {
         console.error(error)
@@ -48,7 +47,7 @@ usuariosRoute.post('/', async (req, res) => {
 usuariosRoute.delete('/:id', async (req, res) => {
     try {
         const {id} = req.params
-        const [result] = await pool.query("DELETE FROM usuarios WHERE id=?", [id])
+        const [result] = await usuariosServices.delete(id)
         if(result.length === 0){
             res.status(404).json("Não há usuário para deletar")
         }else {
@@ -66,12 +65,12 @@ usuariosRoute.delete('/:id', async (req, res) => {
 usuariosRoute.put('/:id', async (req,res) => {
     try {
         const {id} = req.params
-        const {nome, senha, cargo} = req.body
-
-        if(!nome || !senha || !cargo){
+        const {modelo, cor, valor, ano} = req.body
+        
+        if(!modelo || !cor || !valor || !ano){
             res.status(400).json("Por favor preencha todos os campos")
         } else {
-            const [result] = await pool.query('UPDATE usuarios SET nome = ?, senha = ?, cargo = ? WHERE id = ?', [nome, senha, cargo, id])
+            const [result] = await usuariosServices.put(modelo, cor, valor, ano, id)
             res.status(200).json({
                 data: result,
                 message: "Atualização de usuário feita com sucesso!"

@@ -1,8 +1,8 @@
 import pool from "../config/db.js"
 
-class UsuariosServices {
+class carrosServices {
     async getAll() {
-        const result = await pool.query("SELECT * FROM usuarios")
+        const result = await pool.query("SELECT * FROM carros")
 
         if (result.rows.length === 0) {
             return []
@@ -14,7 +14,7 @@ class UsuariosServices {
 
     async getByID(id) {
         const result = await pool.query(
-            "SELECT * FROM usuarios WHERE id = $1",
+            "SELECT * FROM carros WHERE id = $1",
             [id]
         )
 
@@ -23,10 +23,10 @@ class UsuariosServices {
         return result.rows
     }
 
-    async create({ nome, senha, cargo }) {
+    async create({ modelo, cor, valor, ano }) {
         const result = await pool.query(
-            "INSERT INTO usuarios (nome, senha, cargo) VALUES ($1, $2, $3) RETURNING *",
-            [nome, senha, cargo]
+            "INSERT INTO carros (modelo, cor, valor, ano) VALUES ($1, $2, $3, $4) RETURNING *",
+            [modelo, cor, valor, ano]
         )
 
         return result.rows[0]
@@ -34,7 +34,7 @@ class UsuariosServices {
 
     async delete(id) {
         const result = await pool.query(
-            "DELETE FROM usuarios WHERE id = $1 RETURNING *",
+            "DELETE FROM carros WHERE id = $1 RETURNING *",
             [id]
         )
 
@@ -43,17 +43,17 @@ class UsuariosServices {
         return result.rows
     }
 
-    async put({ nome, senha, cargo }, id) {
+    async put({ modelo, cor, valor, ano }, id) {
         if (!id) {
             throw new Error("ID não fornecido")
         }
 
         const result = await pool.query(
-            `UPDATE usuarios 
-             SET nome = $1, senha = $2, cargo = $3 
-             WHERE id = $4 
+            `UPDATE carros 
+             SET modelo = $1, cor = $2, valor = $3, ano = $4 
+             WHERE id = $5 
              RETURNING *`,
-            [nome, senha, cargo, id]
+            [modelo, cor, valor, ano, id]
         )
 
         if (result.rows.length === 0) return []
@@ -62,4 +62,4 @@ class UsuariosServices {
     }
 }
 
-export const usuariosServices = new UsuariosServices()
+export const carrosService = new carrosServices()

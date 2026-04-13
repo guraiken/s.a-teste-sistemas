@@ -1,4 +1,4 @@
-import {createPool} from "mysql2/promise.js";
+import {Pool} from "pg";
 import { env } from "../env.js"
 
 console.log("Tentando conectar com:", {
@@ -7,15 +7,15 @@ console.log("Tentando conectar com:", {
     database: env.database
 });
 
-const pool = createPool({
+const pool = new Pool({
     host: env.host,
     database: env.database,
     port: env.port,
     password: env.password,
     user: env.user,
-    connectionLimit: 10,
-    waitForConnections: true,
-    queueLimit: 0
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+    maxLifetimeSeconds: 60
 })
 
 
