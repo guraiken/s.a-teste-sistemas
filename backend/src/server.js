@@ -17,7 +17,7 @@ pool.on('error', (err, client) => {
 })
 
 app.use("/usuarios", usuariosRoute)
-app.use("/usuarios", carrosRoute)
+app.use("/carros", carrosRoute)
 
 app.listen(PORT, ()=> {
     console.log("Rodando na porta: " + PORT)
