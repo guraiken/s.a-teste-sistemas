@@ -1,0 +1,91 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "gustavo@gmail.com",
+      "password": "teste123"
+    },
+    {
+      "id": "2",
+      "email": "fred@gmail.com",
+      "password": "teste123"
+    },
+    {
+      "email": "123@gmail.com",
+      "password": "teste123",
+      "id": "oZd4MXEg9vc"
+    },
+    {
+      "email": "testee123@gmail.com",
+      "password": "teste123",
+      "id": "Ex0h7iXtoTE"
+    },
+    {
+      "email": "testeeee@gmail.com",
+      "password": "teste123",
+      "id": "nLp8P289i24"
+    },
+    {
+      "email": "TESTE@TESTE",
+      "password": "teste123",
+      "id": "pwIyhPOnVqI"
+    },
+    {
+      "email": "teste@testeteetete",
+      "password": "teste123",
+      "id": "6H0lAEltb-k"
+    }
+  ],
+  "patients": [
+    {
+      "id": "1",
+      "fullName": "Maria Silva",
+      "birthdate": "1990-05-15",
+      "cpf": "12.345.678-9",
+      "maritalStatus": "Solteira",
+      "phone": "1234-5678",
+      "email": "maria.silva@gmail.com",
+      "birthplace": "São Paulo",
+      "emergencyContact": "(48)85544-5955",
+      "allergies": "A, B",
+      "specialCare": "cuidado A",
+      "healthInsurance": "Unimed",
+      "insuranceNumber": "22121",
+      "insuranceValidity": "15/01/2027",
+      "address": {
+        "cep": "88000-000",
+        "city": "Florianópolis",
+        "state": "SC",
+        "street": "Rua X",
+        "number": "30",
+        "complement": "Casa",
+        "neighborhood": "Centro",
+        "reference": "Muro Branco"
+      }
+    }
+  ],
+  "consults": [
+    {
+      "patientId": "2",
+      "reason": "Resfriado",
+      "date": "20-03-2026",
+      "time": "15:30",
+      "description": "Lorem Ipsum",
+      "medication": "Lorem Ipsum",
+      "dosagePrecautions": "Lorem Ipsum",
+      "id": "1"
+    }
+  ],
+  "exams": [
+    {
+      "name": "Lorem",
+      "date": "12-07-2025",
+      "time": "15:20",
+      "type": "Lorem",
+      "laboratory": "Lorem",
+      "documentUrl": "http://docexemplo.com",
+      "results": "Lorem",
+      "id": "1"
+    }
+  ]
+}
