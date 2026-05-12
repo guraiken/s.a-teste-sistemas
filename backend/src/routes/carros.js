@@ -7,12 +7,13 @@ carrosRoute.get('/', async (req, res) => {
     try {
         const carros = await carrosService.getAll()
         if(!carros){
-            res.status(404).json("Não há nenhum usuário")
+            return res.status(404).json("Não há nenhum carro")
         } else {
-            res.status(200).json(carros)
+            return res.status(200).json(carros)
         }
     } catch (error) {
         console.error(error)
+        return res.status(500).json("Erro de servidor")
     }
 })
 
@@ -25,7 +26,7 @@ carrosRoute.get('/:id', async (req,res) => {
 
     } catch (error) {
         console.error(error)
-        res.status(500).json("Erro de servidor")
+        return res.status(500).json("Erro de servidor")
     }
 })
 
@@ -33,14 +34,14 @@ carrosRoute.post('/', async (req, res) => {
     try {
         const body = req.body
         const result = await carrosService.create(body)
-        res.status(201).json({
+        return res.status(201).json({
             data: result,
             message: "Carro cadastrado com sucesso!"
         })
     }
     catch (error) {
         console.error(error)
-        res.status(500).json("Erro interno do servidor")
+        return res.status(500).json("Erro interno do servidor")
     }
 })
 
@@ -49,16 +50,16 @@ carrosRoute.delete('/:id', async (req, res) => {
         const {id} = req.params
         const [result] = await carrosService.delete(id)
         if(result.length === 0){
-            res.status(404).json("Não há carro para deletar")
+            return res.status(404).json("Não há carro para deletar")
         }else {
-            res.status(200).json({
+            return res.status(200).json({
                 data: result,
                 message: "Carro deletado com sucesso!"
             })
         }
     } catch (error) {
         console.error(error)
-        res.status(500).json("Erro de servidor")
+        return res.status(500).json("Erro de servidor")
     }
 })
 
@@ -68,10 +69,10 @@ carrosRoute.put('/:id', async (req,res) => {
         const {modelo, cor, valor, ano} = req.body
         
         if(!modelo || !cor || !valor || !ano){
-            res.status(400).json("Por favor preencha todos os campos")
+            return res.status(400).json("Por favor preencha todos os campos")
         } else {
-            const [result] = await carrosService.put(modelo, cor, valor, ano, id)
-            res.status(200).json({
+            const [result] = await carrosService.put({modelo, cor, valor, ano}, id)
+            return res.status(200).json({
                 data: result,
                 message: "Atualização dos dados do carro feita com sucesso!"
             })
@@ -79,5 +80,6 @@ carrosRoute.put('/:id', async (req,res) => {
         
     } catch (error) {
         console.error("Não foi possível editar o carro", error)
+        return res.status(500).json("Erro de servidor")
     }
 })
