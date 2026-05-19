@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "node --watch ./backend/src/server.js"
+    "dev": "vite"
   },
   "repository": {
     "type": "git",
