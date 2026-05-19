@@ -6,9 +6,10 @@ import axios from "axios"
 const RegisterUser = () => {
 
     //usestates dos campos
-    const [email, setEmail] = useState('')
+    const [nome, setNome] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [cargo, setCargo] = useState('VENDAS')
 
     //validações e o loading
     const [isSaving, setIsSaving] = useState(false)
@@ -19,9 +20,10 @@ const RegisterUser = () => {
     const isPasswordValid = () => password.length >= 8 && password === confirmPassword 
 
     const cleanForm = () => {
-        setEmail("")
+        setNome("")
         setPassword("")
         setConfirmPassword("")
+        setCargo("VENDAS")
         setIsPasswordMatch(true)
     }
 
@@ -37,7 +39,7 @@ const RegisterUser = () => {
 
         try {
             await axios.post("http://localhost:3000/usuarios",{
-                nome: email, senha: password
+                nome, senha: password, cargo
             })
             setIsSaving(false)
             cleanForm()
@@ -58,16 +60,16 @@ const RegisterUser = () => {
 
   return (
     <div className="w-full max-w-md p-6 bg-white rounded-xl">
-        <h2 className="tex-2xl font-bold mb-6 text-center">Criar Usuário</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Criar Usuário</h2>
         <form onSubmit={handleSubmit}>
             <fieldset>
             <InputHandler
                 labelClass="block text-sm font-medium mb-1"
-                label={"Email:"}
-                type={"email"}
-                id={"email"}
-                value={email}
-                setValue={setEmail}
+                label={"Nome:"}
+                type={"text"}
+                id={"nome"}
+                value={nome}
+                setValue={setNome}
                 required
                 className={"w-full p-2 border rounded-lg focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-500"}
                 />
@@ -100,6 +102,17 @@ const RegisterUser = () => {
                 {!isPasswordMatch && (
                     <p className="text-red-500 text-sm mt-1">As senhas não correspondem</p>
                 )}
+            </fieldset>
+            <fieldset className="mt-4">
+                <label className="block text-sm font-medium mb-1">Cargo:</label>
+                <select 
+                    value={cargo} 
+                    onChange={(e) => setCargo(e.target.value)}
+                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <option value="VENDAS">Vendas</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
             </fieldset>
 
             <div>

@@ -10,6 +10,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import {ToastContainer} from "react-toastify"
 import "react-toastify/ReactToastify.css"
 import Dashboard from './pages/Dashboard'
+import Carros from './pages/Carros'
 import { AuthProvider } from './contexts/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
 import DashboardLayout from './layouts/DashboardLayout'
@@ -25,7 +26,8 @@ export const router = createBrowserRouter([
       </PrivateRoute>
       ),
       children: [
-        {path: "/dashboard", element: <Dashboard/>}
+        {path: "/dashboard", element: <Dashboard/>},
+        {path: "/carros", element: <Carros/>}
       ]
     }
 ])

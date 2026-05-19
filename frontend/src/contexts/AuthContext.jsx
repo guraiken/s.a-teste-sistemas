@@ -7,17 +7,17 @@ export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        const savedEmail = localStorage.getItem("email")
-        if(savedEmail) return setUser({email: savedEmail})
+        const savedUsername = localStorage.getItem("username")
+        if(savedUsername) return setUser({username: savedUsername})
     }, [])
 
-    const login = (email) => {
-        localStorage.setItem("email", email)
-        setUser({ email })
+    const login = (username) => {
+        localStorage.setItem("username", username)
+        setUser({ username })
     }
 
     const logout = () => {
-        localStorage.removeItem("email")
+        localStorage.removeItem("username")
         setUser(null)
     }
 

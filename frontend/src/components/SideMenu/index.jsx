@@ -39,7 +39,7 @@ export const SideMenu = () => {
         <aside className={`h-screen bg-cyan-800 text-white flex flex-col justify-between transition-all duration-300 ${isCollapsed ? 'w-20 items-center' : 'w-64'}`}>
             <div className=" p-4 flex items-center justify-between border-b border-cyan-700">
                 { !isCollapsed && (
-                    <h1 className="text-lg font-bold">Clínica +</h1>
+                    <h1 className="text-lg font-bold">Carros +</h1>
                 ) 
             }
             <button onClick={toggleMenu}>
@@ -57,21 +57,9 @@ export const SideMenu = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/pacientes" className="flex items-center gap-3 hover:text-cyan-30">
-                            <FaUserPlus size={20}/>
-                            {!isCollapsed && <span>Paciente</span>}
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/consultas" className="flex items-center gap-3 hover:text-cyan-30">
-                            <FaCalendarCheck size={20}/>
-                            {!isCollapsed && <span>Consultas</span>}
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/exames" className="flex items-center gap-3 hover:text-cyan-30">
+                        <Link to="/carros" className="flex items-center gap-3 hover:text-cyan-30">
                             <FaListAlt size={20}/>
-                            {!isCollapsed && <span>Exames</span>}
+                            {!isCollapsed && <span>Carros</span>}
                         </Link>
                     </li>
                 </ul>

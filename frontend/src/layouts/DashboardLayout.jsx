@@ -16,7 +16,7 @@ function DashboardLayout() {
                     <h1 className="text-xl font-bold text-cyan-800">Painel do Sistema</h1>
                     {user && (
                         <div className="flex items-center gap-4">
-                            <span className="text-gray-700">Bem vindo {user?.email}</span>
+                            <span className="text-gray-700">Bem vindo {user?.username}</span>
                             <button 
                                 className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors cursor-pointer"
                                 onClick={logout}

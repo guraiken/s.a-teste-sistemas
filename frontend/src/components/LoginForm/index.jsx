@@ -12,8 +12,8 @@ const LoginForm = () => {
   const { login, logout, user } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [nome, setNome] = useState("");
+  const [password, setPassword] = useState("");
 
   //   modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,32 +27,28 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.get("http://localhost:3000/users", {
-        params: {
-          email: email.trim(),
-          password: password.trim(),
-        },
-      });
+      const response = await axios.get("http://localhost:3000/usuarios");
 
-      console.log("password", password);
-      console.log(typeof password);
-      // console.log("params", params)
+      const users = response.data.data;
+      const foundUser = users.find(
+        (u) => u.nome === nome.trim() && u.senha === password.trim()
+      );
 
-      if (response.data.length === 0) {
-        toast.error("Usuário não encontrado. Verifique o email e senha", {
+      if (!foundUser) {
+        toast.error("Usuário não encontrado. Verifique o nome e senha", {
           autoClose: 3000,
           hideProgressBar: true,
         });
         return;
       }
 
-      login(email);
+      login(nome);
 
       toast.success("Login realizado com sucesso!", {
         autoClose: 2000,
       });
 
-      setTimeout(() => navigate("/dashboard", 2000));
+      setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {
       console.error("Erro ao verificar usuário", error);
       toast.error("Erro ao conectar com o servidor", {
@@ -65,17 +61,19 @@ const LoginForm = () => {
     <div>
       <section
         className="w-full flex justify-center items-center"
-        onSubmit={handleLogin}
       >
-        <form className="flex flex-col justify-center items-center bg-white px-12 h-[400px] rounded-md shadow-md">
+        <form 
+          className="flex flex-col justify-center items-center bg-white px-12 h-[400px] rounded-md shadow-md"
+          onSubmit={handleLogin}
+        >
           <h2 className="font-bold text-2xl mb-4">Login</h2>
           <InputHandler
-            label={"Email"}
-            type={"email"}
+            label={"Nome"}
+            type={"text"}
             required
-            id={"email"}
-            value={email}
-            setValue={setEmail}
+            id={"nome"}
+            value={nome}
+            setValue={setNome}
           />
           <InputHandler
             label={"Senha"}
