@@ -85,16 +85,16 @@ describe('CT-03 - método put', () => {
         
         test("Cria um objeto com sucesso e retorna o registro gerado", async () => {
             // 1. Dados que você envia para cadastrar (sem ID, pois o banco gera)
-            const dadosParaCriar = { modelo: "Teste", cor: "teste", valor: 300, ano: "2020" }
+            const dadosParaEditar = { modelo: "Teste", cor: "teste", valor: 300, ano: "2020" }
 
             // 2. O que o banco de dados simula retornar (com o ID gerado dentro de 'rows')
-            const mockResultadoBanco = [{ id: 1, ...dadosParaCriar }]
+            const mockResultadoBanco = [{ id: 1, ...dadosParaEditar }]
             
             // Correção aqui: envolvendo o retorno em { rows: ... }
             pool.query.mockResolvedValueOnce({ rows: mockResultadoBanco })
 
             // 3. Executa o método passando apenas os dados do novo registro
-            const resultado = await carRepository.create(dadosParaCriar)
+            const resultado = await carRepository.put(dadosParaCriar)
             
             expect(resultado).toHaveProperty('id', 1)
             expect(resultado.modelo).toBe("Teste")
