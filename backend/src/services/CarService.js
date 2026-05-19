@@ -1,4 +1,4 @@
-import { carRepository } from "../repositories/CarRepository"
+import { carRepository } from "../repositories/CarRepository.js"
 
 class CarService{
     constructor(repository){
@@ -8,11 +8,11 @@ class CarService{
     async getAll() {
         const cars = await this.repository.getAll()
 
-        if (cars.rows.length === 0) {
+        if (cars.length === 0) {
             throw new Error("Nenhum carro foi encontrado")
         }
 
-        return cars.rows
+        return cars
     }
 
     async getById(id){
@@ -20,7 +20,7 @@ class CarService{
 
         const carExists = await this.repository.getById(id)
 
-        if(!carExists) throw new Error("Não foi possível encontrar o carro")
+        if(!carExists || carExists.length === 0) throw new Error("Não foi possível encontrar o carro")
 
         return carExists
     }
@@ -45,7 +45,7 @@ class CarService{
     async edit(id, {modelo, cor, valor, ano}){
         const carExists = await this.repository.getById(id)
 
-        if(!carExists) throw new Error("O carro não foi encontrado")
+        if(!carExists || carExists.length === 0) throw new Error("O carro não foi encontrado")
 
         const editedCar = await this.repository.put({modelo, cor, valor, ano}, id)
 
@@ -55,7 +55,7 @@ class CarService{
     async delete(id){
         const carExists = await this.repository.getById(id)
 
-        if(!carExists) throw new Error("O carro não foi encontrado")
+        if(!carExists  || carExists.length === 0) throw new Error("O carro não foi encontrado")
 
         const deletedCar = await this.repository.delete(id)
 

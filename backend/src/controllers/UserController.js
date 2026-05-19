@@ -1,17 +1,17 @@
-import { carService } from "../services/CarService.js";
+import { userService } from "../services/UserService.js";
 
-class CarController {
+class UserController {
     constructor(service) {
-        this.service = service
+        this.service = userService
     }
 
     async getAll(req, res) {
         try {
-            const cars = await this.service.getAll()
+            const users = await this.service.getAll()
 
             return res.status(200).json({
-                message: "Carros encontrados com sucesso!",
-                data: cars
+                message: "Usuarios encontrados com sucesso!",
+                data: users
             })
         } catch (error) {
             return res.status(404).json({
@@ -25,11 +25,11 @@ class CarController {
         try {
             const id = req.params.id
 
-            const car = await this.service.getById(id)
+            const user = await this.service.getById(id)
 
             return res.status(200).json({
-                data: car,
-                message: "Carro encontrado com sucesso!"
+                data: user,
+                message: "Usuário encontrado com sucesso!"
             })
         } catch (error) {
             return res.status(404).json({
@@ -41,13 +41,13 @@ class CarController {
 
     async create(req, res) {
         try {
-            const carData = req.body
+            const userData = req.body
 
-            const newCar = await this.service.create(carData)
+            const newUser = await this.service.create(userData)
 
             return res.status(201).json({
-                data: newCar,
-                message: "Carro criado com sucesso!"
+                data: newUser,
+                message: "Usuário criado com sucesso!"
             })
         } catch (error) {
             return res.status(404).json({
@@ -62,11 +62,11 @@ class CarController {
             const updatedData = req.body
             const id = req.params.id
 
-            const updatedCar = await this.service.edit(id, updatedData)
+            const updatedUser = await this.service.edit(id, updatedData)
 
             return res.status(200).json({
-                data: updatedCar,
-                message: "O carro foi editado com sucesso!"
+                data: updatedUser,
+                message: "O usuário foi editado com sucesso!"
             })
         } catch (error) {
             return res.status(404).json({
@@ -80,11 +80,11 @@ class CarController {
         try {
             const id = req.params.id
 
-            const deletedCar = await this.service.delete(id)
+            const deletedUser = await this.service.delete(id)
 
             return res.status(200).json({
-                data: deletedCar,
-                message: "O carro foi excluído com sucesso"
+                data: deletedUser,
+                message: "O usuário foi excluído com sucesso"
             })
         } catch (error) {
             return res.status(404).json({
@@ -96,4 +96,4 @@ class CarController {
     }
 }
 
-export const carController = new CarController(carService)
+export const userController = new UserController(userService)

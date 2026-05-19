@@ -1,11 +1,10 @@
 import pool from "../config/db.js"
-import { carUtils } from "../utils/carros-utils.js"
+import { carUtils } from "../utils/car-utils.js"
 
 class CarRepository {
     async getAll() {
         const result = await pool.query(carUtils.getAll())
 
-        console.log("res service", result.rows)
         return result.rows
     }
 
@@ -32,7 +31,7 @@ class CarRepository {
     }
 
     async put({ modelo, cor, valor, ano }, id) {
-        const result = await pool.query(carUtils.delete(), [modelo, cor, valor, ano, id])
+        const result = await pool.query(carUtils.edit(), [modelo, cor, valor, ano, id])
 
         if (result.rows.length === 0) return []
 
