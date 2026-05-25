@@ -1,0 +1,49 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Gustavo",
+      "email": "gustavo@gmail.com",
+      "senha": "12345678",
+      "cargo": "ADMIN"
+    },
+    {
+      "id": 2,
+      "nome": "Fred",
+      "email": "fred@gmail.com",
+      "senha": "12345678",
+      "cargo": "VENDAS"
+    }
+  ],
+  "carros": [
+    {
+      "id": 1,
+      "modelo": "Civic",
+      "cor": "Preto",
+      "valor": 120000,
+      "ano": 2022
+    },
+    {
+      "id": 2,
+      "modelo": "Corolla",
+      "cor": "Branco",
+      "valor": 130000,
+      "ano": 2023
+    }
+  ],
+  "patients": [
+    {
+      "id": "1",
+      "fullName": "Maria Silva",
+      "birthdate": "1990-05-15",
+      "cpf": "12.345.678-9",
+      "maritalStatus": "Solteira",
+      "phone": "1234-5678",
+      "email": "maria.silva@gmail.com",
+      "address": {
+        "city": "Florianópolis",
+        "state": "SC"
+      }
+    }
+  ]
+}

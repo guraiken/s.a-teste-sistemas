@@ -5,6 +5,23 @@ class UserController {
         this.service = userService
     }
 
+    async logar(req, res) {
+        try {
+            const dadosUsuario = req.body
+            const tokens = await this.service.logar(dadosUsuario)
+
+            return res.status(200).json({
+                message: "Login realizado com sucesso!",
+                data: tokens
+            })
+        } catch (error) {
+            return res.status(401).json({
+                error,
+                message: error.message
+            })
+        }
+    }
+
     async getAll(req, res) {
         try {
             const users = await this.service.getAll()

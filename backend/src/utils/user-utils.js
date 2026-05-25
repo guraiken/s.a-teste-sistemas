@@ -5,8 +5,14 @@ class UserUtils {
     getById() {
         return "SELECT * FROM usuarios WHERE id = $1"
     }
+    existeUsuario() {
+        return "SELECT * FROM usuarios WHERE email = $1"
+    }
     create() {
-        return "INSERT INTO usuarios (nome, senha, cargo) VALUES ($1, $2, $3) RETURNING *"
+        return "INSERT INTO usuarios (nome, email, senha, cargo) VALUES ($1, $2, $3, $4) RETURNING *"
+    }
+    criarToken() {
+        return "INSERT INTO token (token, expiresAt, type, usuarioId) VALUES ($1, $2, $3, $4) RETURNING *"
     }
     delete() {
         return "DELETE FROM usuarios WHERE id = $1 RETURNING *"

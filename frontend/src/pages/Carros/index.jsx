@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { toast } from "react-toastify";
 
 const Carros = () => {
@@ -9,11 +9,11 @@ const Carros = () => {
   useEffect(() => {
     const fetchCarros = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/carros");
+        const response = await api.get("/carros");
         setCarros(response.data.data);
       } catch (error) {
         console.error("Erro ao buscar carros", error);
-        toast.error("Erro ao carvegar os carros.");
+        toast.error("Erro ao carregar os carros.");
       } finally {
         setLoading(false);
       }

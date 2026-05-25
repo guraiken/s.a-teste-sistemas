@@ -1,36 +1,43 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-
 const AuthContext = createContext()
 
 export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const savedUsername = localStorage.getItem("username")
-        if(savedUsername) return setUser({username: savedUsername})
+        const savedUser = localStorage.getItem("user")
+        const token = localStorage.getItem("tokenAcesso")
+        
+        if(savedUser && token) {
+            setUser(JSON.parse(savedUser))
+        }
+        setLoading(false)
     }, [])
 
-    const login = (username) => {
-        localStorage.setItem("username", username)
-        setUser({ username })
+    const login = (userData, tokens) => {
+        localStorage.setItem("user", JSON.stringify(userData))
+        localStorage.setItem("tokenAcesso", tokens.tokenAcesso)
+        localStorage.setItem("tokenRefresh", tokens.tokenRefresh)
+        setUser(userData)
     }
 
     const logout = () => {
-        localStorage.removeItem("username")
+        localStorage.removeItem("user")
+        localStorage.removeItem("tokenAcesso")
+        localStorage.removeItem("tokenRefresh")
         setUser(null)
     }
 
     return (
         <AuthContext.Provider
-            value={{user, logout, login}}
+            value={{user, logout, login, loading}}
         >   
-          {children}
+          {!loading && children}
         </AuthContext.Provider>
     )
 }
-
-//hook custom pra consumo do contexto
 
 export const useAuth = () => useContext(AuthContext)
 

@@ -5,8 +5,18 @@ CREATE DATABASE sa_carros;
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(80) NOT NULL,
     cargo VARCHAR(10) CHECK (cargo IN ('VENDAS', 'ADMIN'))
+);
+
+CREATE TABLE token (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    type VARCHAR(10) DEFAULT 'ACCESS' CHECK (type IN ('ACCESS', 'REFRESH')),
+    revoked BOOLEAN DEFAULT FALSE,
+    expiresAt TIMESTAMP NOT NULL,
+    usuarioId INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE carros (

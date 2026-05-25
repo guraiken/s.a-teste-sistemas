@@ -15,14 +15,24 @@ class UserRepository {
     async getByID(id) {
         const result = await pool.query(userUtils.getById(), [id])
 
-        if (result.rows.length === 0) return []
+        if (result.rows.length === 0) return null
 
-        return result.rows
+        return result.rows[0]
     }
 
-    async create({ nome, senha, cargo }) {
-        const result = await pool.query(userUtils.create(), [nome, senha, cargo])
+    async existeUsuario(email) {
+        const result = await pool.query(userUtils.existeUsuario(), [email])
+        return result.rows[0]
+    }
 
+    async create({ nome, email, senha, cargo }) {
+        const result = await pool.query(userUtils.create(), [nome, email, senha, cargo])
+
+        return result.rows[0]
+    }
+
+    async criarToken({ token, expiresAt, type, usuarioId }) {
+        const result = await pool.query(userUtils.criarToken(), [token, expiresAt, type, usuarioId])
         return result.rows[0]
     }
 

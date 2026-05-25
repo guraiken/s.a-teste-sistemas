@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 import { Modal } from "../Modal";
 
 import { Link, useNavigate } from "react-router";
-import axios from "axios";
+import api from "../../services/api";
 import RegisterUser from "../RegisterUser";
 
 const LoginForm = () => {
-  const { login, logout, user } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
-  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //   modal
@@ -27,22 +27,17 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.get("http://localhost:3000/usuarios");
+      const response = await api.post("/login", {
+        email: email.trim(),
+        senha: password.trim()
+      });
 
-      const users = response.data.data;
-      const foundUser = users.find(
-        (u) => u.nome === nome.trim() && u.senha === password.trim()
-      );
-
-      if (!foundUser) {
-        toast.error("Usuário não encontrado. Verifique o nome e senha", {
-          autoClose: 3000,
-          hideProgressBar: true,
-        });
-        return;
-      }
-
-      login(nome);
+      const { tokenAcesso, tokenRefresh } = response.data.data;
+      
+      // Decodificando básico ou apenas passando os dados que o backend deveria retornar
+      // Como o backend logar retorna apenas tokens, vamos assumir um perfil básico
+      // Ou poderíamos ter uma rota /me no backend. Por enquanto, salvaremos o email.
+      login({ email }, { tokenAcesso, tokenRefresh });
 
       toast.success("Login realizado com sucesso!", {
         autoClose: 2000,
@@ -50,8 +45,9 @@ const LoginForm = () => {
 
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error) {
-      console.error("Erro ao verificar usuário", error);
-      toast.error("Erro ao conectar com o servidor", {
+      console.error("Erro ao realizar login", error);
+      const message = error.response?.data?.message || "Erro ao conectar com o servidor";
+      toast.error(message, {
         autoClose: 3000,
       });
     }
@@ -68,12 +64,12 @@ const LoginForm = () => {
         >
           <h2 className="font-bold text-2xl mb-4">Login</h2>
           <InputHandler
-            label={"Nome"}
-            type={"text"}
+            label={"E-mail"}
+            type={"email"}
             required
-            id={"nome"}
-            value={nome}
-            setValue={setNome}
+            id={"email"}
+            value={email}
+            setValue={setEmail}
           />
           <InputHandler
             label={"Senha"}

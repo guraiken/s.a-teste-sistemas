@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { InputHandler } from "../LoginForm/InputHandler"
 import { toast } from "react-toastify"
-import axios from "axios"
+import api from "../../services/api"
 
 const RegisterUser = () => {
 
     //usestates dos campos
     const [nome, setNome] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [cargo, setCargo] = useState('VENDAS')
@@ -21,6 +22,7 @@ const RegisterUser = () => {
 
     const cleanForm = () => {
         setNome("")
+        setEmail("")
         setPassword("")
         setConfirmPassword("")
         setCargo("VENDAS")
@@ -38,8 +40,8 @@ const RegisterUser = () => {
         setIsSaving(true)
 
         try {
-            await axios.post("http://localhost:3000/usuarios",{
-                nome, senha: password, cargo
+            await api.post("/usuarios",{
+                nome, email, senha: password, cargo
             })
             setIsSaving(false)
             cleanForm()
@@ -50,7 +52,8 @@ const RegisterUser = () => {
             
         } catch (error) {
             console.log("Erro ao criar usuário", error)
-            toast.error("Erro ao criar o usuário!", {
+            const message = error.response?.data?.message || "Erro ao criar o usuário!"
+            toast.error(message, {
                 autoClose:2000,
                 hideProgressBar: true
             })
@@ -70,6 +73,18 @@ const RegisterUser = () => {
                 id={"nome"}
                 value={nome}
                 setValue={setNome}
+                required
+                className={"w-full p-2 border rounded-lg focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-500"}
+                />
+            </fieldset>
+            <fieldset>
+            <InputHandler
+                labelClass="block text-sm font-medium mb-1"
+                label={"E-mail:"}
+                type={"email"}
+                id={"email"}
+                value={email}
+                setValue={setEmail}
                 required
                 className={"w-full p-2 border rounded-lg focus:border-none focus:outline-none focus:ring-2 focus:ring-blue-500"}
                 />

@@ -1,8 +1,57 @@
 import { userRepository } from "../repositories/UserRepository.js"
+import bcrypt from "bcrypt"
+import { signTokenAcesso, signTokenRefresh } from "../utils/jwt-utils.js"
 
 class UserService{
     constructor(repository){
         this.repository = repository
+    }
+
+    async logar(dadosUsuario) {
+        const existeUsuario = await this.repository.existeUsuario(dadosUsuario.email || '')
+        const credenciaisValidas = await bcrypt.compare(dadosUsuario.senha || "", existeUsuario?.senha || "")
+        
+        console.log(existeUsuario, credenciaisValidas, dadosUsuario)
+
+        if (existeUsuario && credenciaisValidas) {
+            const tokenAcesso = signTokenAcesso({
+                email: existeUsuario.email,
+                nome: existeUsuario.nome
+            })
+            const tokenRefresh = signTokenRefresh({
+                email: existeUsuario.email,
+                nome: existeUsuario.nome
+            })
+
+            const accessExpires = new Date()
+            const accessExpiresUpdate = accessExpires.setHours(accessExpires.getHours() + 1)
+            
+            // acesso create
+            await this.repository.criarToken({
+                token: tokenAcesso,
+                expiresAt: new Date(accessExpiresUpdate),
+                type: 'ACCESS',
+                usuarioId: existeUsuario.id
+            })
+
+            //refresh create
+            const refreshExpires = new Date()
+            const refreshExpiresUpdated = refreshExpires.setMonth(refreshExpires.getMonth() + 1)
+
+            await this.repository.criarToken({
+                token: tokenRefresh,
+                expiresAt: new Date(refreshExpiresUpdated),
+                type: 'REFRESH',
+                usuarioId: existeUsuario.id
+            })
+
+            return {
+                tokenAcesso,
+                tokenRefresh
+            }
+        }
+
+        throw new Error("Credenciais inválidas")
     }
 
     async getAll() {
@@ -28,13 +77,16 @@ class UserService{
     async create(userData) {
         if(!userData) throw new Error("Nenhum dado fornecido para o post")
 
-        if(!userData.nome || !userData.senha || !userData.cargo){
+        if(!userData.nome || !userData.email || !userData.senha || !userData.cargo){
             throw new Error("Por favor preencha todos os campos")
         }
 
+        const hashedPassword = await bcrypt.hash(userData.senha, 10)
+
         const createUser = await this.repository.create({
             nome: userData.nome,
-            senha: userData.senha,
+            email: userData.email,
+            senha: hashedPassword,
             cargo: userData.cargo
         })
 
