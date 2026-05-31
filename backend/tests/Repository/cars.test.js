@@ -1,6 +1,6 @@
 import pool from "../../src/config/db.js"
-import { carRepository } from "../../src/repositories/CarRepository.js" // 1. Adicionada a extensão .js aqui
-import {describe, jest, test} from "@jest/globals"
+import { carRepository } from "../../src/repositories/CarRepository.js"
+import {describe, jest, test, expect, beforeEach} from "@jest/globals"
 
 describe('CT-01 - método get', () => {
 
@@ -8,41 +8,36 @@ describe('CT-01 - método get', () => {
         pool.query = jest.fn()
     })
 
-    // 2. Removido o 'async' do describe, ele deve ser síncrono
     describe("Todos os carros", () => {
         
-        // 3. Criamos um bloco 'it' (ou 'test') assíncrono para rodar o teste de fato
         test("Retorna um array de carros", async () => {
-            const todosUsuarios = [
-                {id: 1, nome: "Teste", senha: "teste", cargo: "VENDAS"},
-                {id: 2, nome: "Teste1", senha: "teste1", cargo: "ADMIN"}
+            const todosCarros = [
+                {id: 1, modelo: "Civic", cor: "Preto", valor: 100000, ano: 2022},
+                {id: 2, modelo: "Corolla", cor: "Branco", valor: 110000, ano: 2023}
             ]
 
-            // Configura o mock antes de chamar a função
-            pool.query.mockResolvedValueOnce({rows: todosUsuarios})
+            pool.query.mockResolvedValueOnce({rows: todosCarros})
 
-            // Executa o método do repositório
             const resultado = await carRepository.getAll()
             
-            // Faz a checagem que você aprendeu!
             expect(Array.isArray(resultado)).toBe(true)
-            expect(resultado.length).toBeGreaterThan(0)
+            expect(resultado.length).toBe(2)
+            expect(resultado[0].modelo).toBe("Civic")
         })
     })
+
     describe("Retorna um único carro", () => {
         test("Retorna um carro único", async() => {
-             const usuarioUnico = [
-                {id: 1, nome: "Teste", senha: "teste", cargo: "VENDAS"}
-            ]
+             const carroUnico = {id: 1, modelo: "Civic", cor: "Preto", valor: 100000, ano: 2022}
 
             const id = 1
 
-            pool.query.mockResolvedValueOnce({rows: usuarioUnico})
+            pool.query.mockResolvedValueOnce({rows: [carroUnico]})
 
             const resultado = await carRepository.getById(id)
 
-            expect(Array.isArray(resultado)).toBe(true)
-            expect(resultado).toHaveLength(1)
+            expect(typeof resultado).toBe('object')
+            expect(resultado.modelo).toBe("Civic")
         })
     })
 })
@@ -55,23 +50,19 @@ describe('CT-02 - método create', () => {
     describe("Criando o carro", () => {
         
         test("Cria um objeto com sucesso e retorna o registro gerado", async () => {
-            // 1. Dados que você envia para cadastrar (sem ID, pois o banco gera)
-            const dadosParaCriar = { modelo: "Teste", cor: "teste", valor: 300, ano: "2020" }
+            const dadosParaCriar = { modelo: "Fit", cor: "Cinza", valor: 80000, ano: 2021 }
 
-            // 2. O que o banco de dados simula retornar (com o ID gerado dentro de 'rows')
-            const mockResultadoBanco = [{ id: 1, ...dadosParaCriar }]
+            const mockResultadoBanco = [{ id: 3, ...dadosParaCriar }]
             
-            // Correção aqui: envolvendo o retorno em { rows: ... }
             pool.query.mockResolvedValueOnce({ rows: mockResultadoBanco })
 
-            // 3. Executa o método passando apenas os dados do novo registro
             const resultado = await carRepository.create(dadosParaCriar)
             
-            expect(resultado).toHaveProperty('id', 1)
-            expect(resultado.modelo).toBe("Teste")
-            expect(resultado.cor).toBe("teste")
-            expect(resultado.valor).toBe(300)
-            expect(resultado.ano).toBe("2020")
+            expect(resultado).toHaveProperty('id', 3)
+            expect(resultado.modelo).toBe("Fit")
+            expect(resultado.cor).toBe("Cinza")
+            expect(resultado.valor).toBe(80000)
+            expect(resultado.ano).toBe(2021)
         })
     })
 })
@@ -83,25 +74,43 @@ describe('CT-03 - método put', () => {
 
     describe("Editando o carro", () => {
         
-        test("Cria um objeto com sucesso e retorna o registro gerado", async () => {
-            // 1. Dados que você envia para cadastrar (sem ID, pois o banco gera)
-            const dadosParaEditar = { modelo: "Teste", cor: "teste", valor: 300, ano: "2020" }
+        test("Edita um objeto com sucesso e retorna o registro atualizado", async () => {
+            const id = 1
+            const dadosParaEditar = { modelo: "Civic Alterado", cor: "Azul", valor: 105000, ano: 2022 }
 
-            // 2. O que o banco de dados simula retornar (com o ID gerado dentro de 'rows')
-            const mockResultadoBanco = [{ id: 1, ...dadosParaEditar }]
+            const mockResultadoBanco = [{ id, ...dadosParaEditar }]
             
-            // Correção aqui: envolvendo o retorno em { rows: ... }
             pool.query.mockResolvedValueOnce({ rows: mockResultadoBanco })
 
-            // 3. Executa o método passando apenas os dados do novo registro
-            const resultado = await carRepository.put(dadosParaCriar)
+            const resultado = await carRepository.put(dadosParaEditar, id)
             
             expect(resultado).toHaveProperty('id', 1)
-            expect(resultado.modelo).toBe("Teste")
-            expect(resultado.cor).toBe("teste")
-            expect(resultado.valor).toBe(300)
-            expect(resultado.ano).toBe("2020")
+            expect(resultado.modelo).toBe("Civic Alterado")
+            expect(resultado.cor).toBe("Azul")
+            expect(resultado.valor).toBe(105000)
+            expect(resultado.ano).toBe(2022)
         })
     })
 })
 
+describe('CT-04 - método delete', () => {
+    beforeEach(() => {
+        pool.query = jest.fn()
+    })
+
+    describe("Excluindo o carro", () => {
+        
+        test("Exclui um carro com sucesso e retorna o registro excluído", async () => {
+            const id = 1
+            const carroExcluido = [{ id: 1, modelo: "Civic", cor: "Preto", valor: 100000, ano: 2022 }]
+
+            pool.query.mockResolvedValueOnce({ rows: carroExcluido })
+
+            const resultado = await carRepository.delete(id)
+            
+            expect(resultado).toHaveLength(1)
+            expect(resultado[0]).toHaveProperty('id', 1)
+            expect(resultado[0].modelo).toBe("Civic")
+        })
+    })
+})

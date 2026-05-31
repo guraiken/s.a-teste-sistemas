@@ -11,9 +11,9 @@ class CarRepository {
     async getById(id) {
         const result = await pool.query(carUtils.getById(), [id])
 
-        if (result.rows.length === 0) return []
+        if (result.rows.length === 0) return null
 
-        return result.rows
+        return result.rows[0]
     }
 
     async create({ modelo, cor, valor, ano }) {

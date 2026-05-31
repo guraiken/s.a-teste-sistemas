@@ -12,7 +12,7 @@ class UserRepository {
         return result.rows
     }
 
-    async getByID(id) {
+    async getById(id) {
         const result = await pool.query(userUtils.getById(), [id])
 
         if (result.rows.length === 0) return null

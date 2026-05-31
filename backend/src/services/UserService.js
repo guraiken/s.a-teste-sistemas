@@ -69,7 +69,7 @@ class UserService{
 
         const userExists = await this.repository.getById(id)
 
-        if(!userExists || userExists.length === 0) throw new Error("Não foi possível encontrar o usuário")
+        if(!userExists) throw new Error("Não foi possível encontrar o usuário")
 
         return userExists
     }
@@ -96,7 +96,7 @@ class UserService{
     async edit(id, {nome, senha, cargo}){
         const userExists = await this.repository.getById(id)
 
-        if(!userExists || userExists.length === 0) throw new Error("O usuário não foi encontrado")
+        if(!userExists) throw new Error("O usuário não foi encontrado")
 
         const editedUser = await this.repository.put({nome, senha, cargo}, id)
 
@@ -106,7 +106,7 @@ class UserService{
     async delete(id){
         const userExists = await this.repository.getById(id)
 
-        if(!userExists || userExists.length === 0) throw new Error("O usuário não foi encontrado")
+        if(!userExists) throw new Error("O usuário não foi encontrado")
 
         const deletedUser = await this.repository.delete(id)
 
