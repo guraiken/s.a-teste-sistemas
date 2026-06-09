@@ -14,6 +14,8 @@ import Carros from './pages/Carros'
 import { AuthProvider } from './contexts/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
 import DashboardLayout from './layouts/DashboardLayout'
+import { Modal } from './components/Modal'
+import { DetailsModal } from './components/DetailsModal'
 
 
 
@@ -27,7 +29,8 @@ export const router = createBrowserRouter([
       ),
       children: [
         {path: "/dashboard", element: <Dashboard/>},
-        {path: "/carros", element: <Carros/>}
+        {path: "/carros", element: <Carros/>},
+        {path: "/carros/:id", element: <DetailsModal component={<Dashboard/>}> <div>Oi</div></DetailsModal>}
       ]
     }
 ])

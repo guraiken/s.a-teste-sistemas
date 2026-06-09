@@ -1,82 +1,86 @@
-import { Link, useNavigate } from "react-router";
-import {
-    MdDashboard,
-    MdExitToApp,
-    MdMenu,
-    MdClose
-} from 'react-icons/md'
+﻿import { Link, useNavigate } from "react-router";
+import { MdDashboard, MdExitToApp, MdMenu, MdClose } from "react-icons/md";
 
-import { 
-    FaUserPlus,
-    FaListAlt,
-    FaCalendarCheck
-} from 'react-icons/fa'
+import { FaUserPlus, FaListAlt, FaCalendarCheck } from "react-icons/fa";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
 
 export const SideMenu = () => {
-    const navigate = useNavigate()
-    const { logout } = useAuth();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
 
-    // controle do menu lateral (aberto ou fechado)
-    const [isCollapsed, setIsCollapsed] = useState(false)
+  // controle do menu lateral (aberto ou fechado)
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
-    // função logout
+  // função logout
 
-    const handleLogout = () => {
-        logout()
-        navigate("/")
-    }
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
-    //função toggle menu
+  //função toggle menu
 
-    const toggleMenu = () => {
-        setIsCollapsed(!isCollapsed)
-    }
+  const toggleMenu = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
-    return (
-        <aside className={`h-screen bg-cyan-800 text-white flex flex-col justify-between transition-all duration-300 ${isCollapsed ? 'w-20 items-center' : 'w-64'}`}>
-            <div className=" p-4 flex items-center justify-between border-b border-cyan-700">
-                { !isCollapsed && (
-                    <h1 className="text-lg font-bold">Carros +</h1>
-                ) 
-            }
+  const widthClass = isCollapsed ? 'w-20' : 'w-64';
+
+  return (
+    <>
+      {/* spacer to avoid overlaying content */}
+      <div className={`${widthClass} flex-shrink-0 h-screen`} />
+
+      <aside className="fixed top-0 left-0 z-40 h-screen">
+        <section
+          className={`${widthClass} bg-cyan-800 h-screen text-white flex flex-col justify-between transition-all duration-300 ${isCollapsed ? "items-center" : ""}`}
+        >
+          <div className=" p-4 flex items-center justify-between border-b border-cyan-700">
+            {!isCollapsed && <h1 className="text-lg font-bold">Carros +</h1>}
             <button onClick={toggleMenu}>
-                {isCollapsed ? <MdMenu size={24}/> : <MdClose size={24}/>}
+              {isCollapsed ? <MdMenu size={24} /> : <MdClose size={24} />}
             </button>
-            </div>
+          </div>
 
-            {/* MENU */}
-            <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
-                <ul className="space-y-3">
-                    <li>
-                        <Link to="/dashboard" className="flex items-center gap-3 hover:text-cyan-30">
-                            <MdDashboard size={20}/>
-                            {!isCollapsed && <span>Início</span>}
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/carros" className="flex items-center gap-3 hover:text-cyan-30">
-                            <FaListAlt size={20}/>
-                            {!isCollapsed && <span>Carros</span>}
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-
-            {/* botao de sair  */}
-
-            <div className="p-4 border-t border-cyan-700">
-                <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 text-red-300 hover:text-red-500 w-full cursor-pointer"
+          {/* MENU */}
+          <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-3 hover:text-cyan-300"
                 >
-                    <MdExitToApp size={20}/>
-                    {!isCollapsed && <span>Sair</span>}
-                </button>
-            </div>
+                  <MdDashboard size={20} />
+                  {!isCollapsed && <span>Início</span>}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/carros"
+                  className="flex items-center gap-3 hover:text-cyan-300"
+                >
+                  <FaListAlt size={20} />
+                  {!isCollapsed && <span>Carros</span>}
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
-        </aside>
-    )
-}
+          {/* botao de sair  */}
+
+          <div className="p-4 border-t border-cyan-700">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 text-red-300 hover:text-red-500 w-full cursor-pointer"
+            >
+              <MdExitToApp size={20} />
+              {!isCollapsed && <span>Sair</span>}
+            </button>
+          </div>
+        </section>
+      </aside>
+    </>
+  );
+};
