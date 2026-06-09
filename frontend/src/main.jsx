@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoute'
 import DashboardLayout from './layouts/DashboardLayout'
 import { Modal } from './components/Modal'
 import { DetailsModal } from './components/DetailsModal'
+import CarDetails from './components/CarDetails'
 
 
 
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
       children: [
         {path: "/dashboard", element: <Dashboard/>},
         {path: "/carros", element: <Carros/>},
-        {path: "/carros/:id", element: <DetailsModal component={<Dashboard/>}> <div>Oi</div></DetailsModal>}
+        {path: "/carros/:id", element: <DetailsModal component={<Dashboard/>}><CarDetails/></DetailsModal>}
       ]
     }
 ])
