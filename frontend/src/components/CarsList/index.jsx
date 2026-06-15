@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaUserAlt } from "react-icons/fa";
+import { RiCarFill } from "react-icons/ri";
 import { Link } from "react-router";
 import api from "../../services/api";
 
@@ -72,7 +72,7 @@ export const CarsList = () => {
             >
               <div className="flex items-center gap-4">
                 <div className="bg-cyan-100 text-cyan-700 p-3 rounded-full">
-                  <FaUserAlt size={20} />
+                  <RiCarFill size={20} />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800"> {car.modelo}</p>

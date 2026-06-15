@@ -17,6 +17,7 @@ import DashboardLayout from './layouts/DashboardLayout'
 import { Modal } from './components/Modal'
 import { DetailsModal } from './components/DetailsModal'
 import CarDetails from './components/CarDetails'
+import Admin from './pages/Admin'
 
 
 
@@ -31,7 +32,8 @@ export const router = createBrowserRouter([
       children: [
         {path: "/dashboard", element: <Dashboard/>},
         {path: "/carros", element: <Carros/>},
-        {path: "/carros/:id", element: <DetailsModal component={<Dashboard/>}><CarDetails/></DetailsModal>}
+        {path: "/carros/:id", element: <DetailsModal component={<Dashboard/>}><CarDetails/></DetailsModal>},
+        {path: "/admin", element: <Admin/>}
       ]
     }
 ])
