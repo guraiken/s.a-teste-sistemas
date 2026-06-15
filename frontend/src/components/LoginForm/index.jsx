@@ -106,7 +106,7 @@ const LoginForm = () => {
         </form>
       </section>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <RegisterUser />
+        <RegisterUser onClose={() => setIsModalOpen(false)}/>
       </Modal>
     </div>
   );

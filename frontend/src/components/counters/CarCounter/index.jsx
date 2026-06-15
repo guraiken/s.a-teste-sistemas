@@ -1,10 +1,12 @@
 ﻿import { useState, useEffect } from "react"
 import api from "../../../services/api"
 import { IoCarSportSharp } from "react-icons/io5";
+import { useAuth } from "../../../contexts/AuthContext";
 
 export const CarCounter = () => {
 
     const [carCounter, setCarCounter] = useState(0)
+    const {checkLogin} = useAuth()
 
     useEffect(()=> {
 
@@ -15,6 +17,9 @@ export const CarCounter = () => {
                 setCarCounter(response.data.data.length)
             } catch (error) {
                 console.error("Erro ao obter dados das consultas", error)
+                if(error.status === 401) {
+                    checkLogin(error)
+                }
             }
         }
         fetchCars()

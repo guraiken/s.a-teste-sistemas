@@ -3,8 +3,7 @@ import { InputHandler } from "../LoginForm/InputHandler"
 import { toast } from "react-toastify"
 import api from "../../services/api"
 
-const RegisterUser = () => {
-
+const RegisterUser = ( {onClose}) => {
     //usestates dos campos
     const [nome, setNome] = useState('')
     const [email, setEmail] = useState('')
@@ -27,6 +26,7 @@ const RegisterUser = () => {
         setConfirmPassword("")
         setCargo("VENDAS")
         setIsPasswordMatch(true)
+        onClose()
     }
 
     const handleSubmit = async (e) => {

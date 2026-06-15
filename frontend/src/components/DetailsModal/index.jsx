@@ -17,9 +17,9 @@ export const DetailsModal = ({ closeLeadsTo, children, component }) => {
       <div
         className="flex fixed inset-0 z-50 items-center justify-center bg-black/50" 
       >
-        <div className="bg-white rounded-xl shadow-lg w-full h-full max-h-120 max-w-4xl p-6 relative animate-fade">
+        <div className="bg-cyan-800 rounded-xl shadow-lg w-full h-full max-h-120 max-w-4xl p-6 relative animate-fade">
           <button
-            className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 font-bold text-lg hover:cursor-pointer"
+            className="absolute top-3 right-4 text-white hover:text-gray-700 font-bold text-lg hover:cursor-pointer"
             onClick={handleClose}
           >
             x

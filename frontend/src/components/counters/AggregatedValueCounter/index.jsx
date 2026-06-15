@@ -1,14 +1,15 @@
 ﻿import { useState, useEffect } from "react"
 import api from "../../../services/api"
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { useAuth } from "../../../contexts/AuthContext";
 
 
 export const AggregatedValue = () => {
 
     const [aggregatedValue, setAggregatedValue] = useState(0)
+    const { checkLogin } = useAuth()
 
     useEffect(()=> {
-
         const fetchCars = async () => {
             try {
                 const response = await api.get("/carros")
@@ -26,6 +27,9 @@ export const AggregatedValue = () => {
                 setAggregatedValue(formatoMoeda.format(aggregatedValueCalc))
             } catch (error) {
                 console.error("Erro ao obter dados das consultas", error)
+                if(error.status === 401) {
+                    checkLogin(error)
+                }
             }
         }
         fetchCars()
