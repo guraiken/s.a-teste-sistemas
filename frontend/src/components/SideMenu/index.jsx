@@ -1,4 +1,4 @@
-﻿import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { MdDashboard, MdExitToApp, MdMenu, MdClose } from "react-icons/md";
 import { RiAdminFill } from "react-icons/ri"
 import { FaListAlt } from "react-icons/fa";
@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export const SideMenu = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
 
   // controle do menu lateral (aberto ou fechado)
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -38,8 +38,8 @@ export const SideMenu = () => {
           className={`${widthClass} bg-cyan-800 h-screen text-white flex flex-col justify-between transition-all duration-300 ${isCollapsed ? "items-center" : ""}`}
         >
           <div className=" p-4 flex items-center justify-between border-b border-cyan-700">
-            {!isCollapsed && <h1 className="text-lg font-bold">Carros +</h1>}
-            <button onClick={toggleMenu}>
+            {!isCollapsed && <h1 className="text-lg font-bold">Ocean Drive</h1>}
+            <button onClick={toggleMenu} >
               {isCollapsed ? <MdMenu size={24} /> : <MdClose size={24} />}
             </button>
           </div>
@@ -65,15 +65,17 @@ export const SideMenu = () => {
                   {!isCollapsed && <span>Carros</span>}
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/admin"
-                  className="flex items-center gap-3 hover:text-cyan-300"
-                >
-                  <RiAdminFill size={20} />
-                  {!isCollapsed && <span>Painel de Admin</span>}
-                </Link>
-              </li>
+              {isAdmin && (
+                <li>
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-3 hover:text-cyan-300"
+                  >
+                    <RiAdminFill size={20} />
+                    {!isCollapsed && <span>Painel de Admin</span>}
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
 

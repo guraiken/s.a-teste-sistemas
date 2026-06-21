@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import api from "../../../services/api"
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -36,11 +36,12 @@ export const AggregatedValue = () => {
     }, [])
   
     return (
-    <div className="p-6 bg-white shadow rounded-lg flex flex-col items-center w-60">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-            <FaMoneyBillTrendUp size={20} className="text-blue-600 flex-row-reverse"/>{aggregatedValue}
+    <div className="p-6 bg-white shadow rounded-lg flex flex-col items-center w-60 border border-gray-100">
+        <FaMoneyBillTrendUp size={36} className="bg-cyan-700 text-white p-1 rounded-xl mb-3"/>
+        <h2 className="text-xl font-bold">
+            {aggregatedValue}
         </h2>
-            {aggregatedValue && <p className="text-gray-600 mt-2">Valor Agregado</p>}
+        <p className="text-gray-500 text-sm mt-1 font-medium">Valor Agregado</p>
     </div>
   )
 }

@@ -1,11 +1,11 @@
-import logo from "../../assets/images/car-image-login.png"
+import logo from "../../assets/images/logo.png"
 import LoginForm from "../../components/LoginForm"
 
 function Login() {
   return (
     <>
       <div className="flex min-h-screen bg-gray-100">
-        <div className="hidden md:flex w-1/2 bg-gray-500 flex-col items-center justify-center p-8">
+        <div className="hidden md:flex w-1/2 bg-cyan-800/30 flex-col items-center justify-center p-8">
           <img src={logo} alt="clinica" className="mb-6"/>
         </div>
         <div className="flex w-full md:w-1/2 justify-center items-center p-8">

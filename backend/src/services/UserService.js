@@ -16,11 +16,13 @@ class UserService{
         if (existeUsuario && credenciaisValidas) {
             const tokenAcesso = signTokenAcesso({
                 email: existeUsuario.email,
-                nome: existeUsuario.nome
+                nome: existeUsuario.nome,
+                cargo: existeUsuario.cargo
             })
             const tokenRefresh = signTokenRefresh({
                 email: existeUsuario.email,
-                nome: existeUsuario.nome
+                nome: existeUsuario.nome,
+                cargo: existeUsuario.cargo
             })
 
             const accessExpires = new Date()
@@ -47,7 +49,13 @@ class UserService{
 
             return {
                 tokenAcesso,
-                tokenRefresh
+                tokenRefresh,
+                usuario: {
+                    id: existeUsuario.id,
+                    nome: existeUsuario.nome,
+                    email: existeUsuario.email,
+                    cargo: existeUsuario.cargo
+                }
             }
         }
 

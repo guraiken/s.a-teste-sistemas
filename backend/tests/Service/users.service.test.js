@@ -96,7 +96,7 @@ describe('UserService Tests', () => {
         test('Deve realizar login com sucesso', async () => {
             const loginData = { email: 'joao@teste.com', senha: '123' }
             const hashedPassword = await bcrypt.hash('123', 10)
-            const mockUser = { id: 1, nome: 'João', email: 'joao@teste.com', senha: hashedPassword }
+            const mockUser = { id: 1, nome: 'João', email: 'joao@teste.com', senha: hashedPassword, cargo: 'ADMIN' }
 
             userRepository.existeUsuario.mockResolvedValue(mockUser)
             userRepository.criarToken.mockResolvedValue({ id: 1 })

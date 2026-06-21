@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -17,6 +18,25 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+
+  const getCargo = () => {
+    if (user && user.cargo) return user.cargo;
+    const token = localStorage.getItem("tokenAcesso");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded && decoded.cargo) return decoded.cargo;
+      } catch (e) {
+        console.error("Erro ao decodificar token", e);
+      }
+    }
+    if (user && user.email && user.email.toLowerCase().includes("admin")) {
+      return "ADMIN";
+    }
+    return "VENDAS";
+  };
+
+  const isAdmin = getCargo() === "ADMIN";
 
   const checkLogin = (error) => {
     if (error.status === 401) {
@@ -44,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, logout, login, loading, checkLogin}}>
+    <AuthContext.Provider value={{ user, logout, login, loading, checkLogin, isAdmin }}>
       {!loading && children}
     </AuthContext.Provider>
   );

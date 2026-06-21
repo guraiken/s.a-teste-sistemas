@@ -32,12 +32,9 @@ const LoginForm = () => {
         senha: password.trim()
       });
 
-      const { tokenAcesso, tokenRefresh } = response.data.data;
+      const { tokenAcesso, tokenRefresh, usuario } = response.data.data;
       
-      // Decodificando básico ou apenas passando os dados que o backend deveria retornar
-      // Como o backend logar retorna apenas tokens, vamos assumir um perfil básico
-      // Ou poderíamos ter uma rota /me no backend. Por enquanto, salvaremos o email.
-      login({ email }, { tokenAcesso, tokenRefresh });
+      login(usuario || { email }, { tokenAcesso, tokenRefresh });
 
       toast.success("Login realizado com sucesso!", {
         autoClose: 2000,

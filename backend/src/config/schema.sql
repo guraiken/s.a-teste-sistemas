@@ -27,6 +27,7 @@ CREATE TABLE carros (
     ano INTEGER
 );
 
+-- INSERT MOCKADO DE CARROS
 INSERT INTO carros (modelo, cor, valor, ano)
 VALUES
 ('Fiat Uno', 'Vermelho', 15000, 2019),

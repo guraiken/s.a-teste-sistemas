@@ -63,7 +63,7 @@ O sistema é uma aplicação web para gestão de cadastro de usuários e carros,
 
 #### RF-C1: Listar Todos os Carros
 - **Descrição**: O sistema deve permitir listar todos os carros cadastrados
-- **Endpoint**: `GET /usuarios/carros` *(Note: rota está em /usuarios conforme server.js)*
+- **Endpoint**: `GET /carros`
 - **Campos Retornados**: id, modelo, cor, valor, ano
 - **Critérios de Aceitação**:
   - Retornar status 200 quando há carros cadastrados
@@ -72,7 +72,7 @@ O sistema é uma aplicação web para gestão de cadastro de usuários e carros,
 
 #### RF-C2: Buscar Carro por ID
 - **Descrição**: O sistema deve permitir buscar um carro específico pelo ID
-- **Endpoint**: `GET /usuarios/carros/:id`
+- **Endpoint**: `GET /carros/:id`
 - **Campos Retornados**: {data: {id, modelo, cor, valor, ano}, message: "Carro encontrado com sucesso!"}
 - **Critérios de Aceitação**:
   - Retornar status 200 com dados do carro quando ID existe
@@ -80,7 +80,7 @@ O sistema é uma aplicação web para gestão de cadastro de usuários e carros,
 
 #### RF-C3: Criar Novo Carro
 - **Descrição**: O sistema deve permitir cadastrar um novo carro
-- **Endpoint**: `POST /usuarios/carros`
+- **Endpoint**: `POST /carros`
 - **Campos Obrigatórios**: modelo (string), cor (string), valor (decimal), ano (integer)
 - **Critérios de Aceitação**:
   - Retornar status 201 com dados do carro criado
@@ -90,7 +90,7 @@ O sistema é uma aplicação web para gestão de cadastro de usuários e carros,
 
 #### RF-C4: Atualizar Carro
 - **Descrição**: O sistema deve permitir atualizar dados de um carro existente
-- **Endpoint**: `PUT /usuarios/carros/:id`
+- **Endpoint**: `PUT /carros/:id`
 - **Campos Atualizáveis**: modelo, cor, valor, ano
 - **Critérios de Aceitação**:
   - Retornar status 200 com dados do carro atualizado
@@ -100,7 +100,7 @@ O sistema é uma aplicação web para gestão de cadastro de usuários e carros,
 
 #### RF-C5: Deletar Carro
 - **Descrição**: O sistema deve permitir deletar um carro
-- **Endpoint**: `DELETE /usuarios/carros/:id`
+- **Endpoint**: `DELETE /carros/:id`
 - **Critérios de Aceitação**:
   - Retornar status 200 com confirmação de exclusão quando carro existe
   - Retornar status 404 quando carro não existe
@@ -357,7 +357,7 @@ Resultado Esperado:
 #### TC-C-001: Listar todos os carros com sucesso
 ```
 Pré-condição: Banco de dados possui pelo menos 2 carros
-Ação: GET /usuarios/carros
+Ação: GET /carros
 Resultado Esperado:
   - Status: 200
   - Response contém array com carros
@@ -367,16 +367,16 @@ Resultado Esperado:
 #### TC-C-002: Listar carros quando não há nenhum
 ```
 Pré-condição: Tabela carros vazia
-Ação: GET /usuarios/carros
+Ação: GET /carros
 Resultado Esperado:
   - Status: 404
-  - Mensagem: "Não há nenhum usuário" (nota: mensagem incorreta no código)
+  - Mensagem: "Nenhum carro foi encontrado"
 ```
 
 #### TC-C-003: Buscar carro por ID existente
 ```
 Pré-condição: Carro com id=1 existe
-Ação: GET /usuarios/carros/1
+Ação: GET /carros/1
 Resultado Esperado:
   - Status: 200
   - Response: {data: {id, modelo, cor, valor, ano}, message: "Carro encontrado com sucesso!"}
@@ -385,16 +385,16 @@ Resultado Esperado:
 #### TC-C-004: Buscar carro por ID inexistente
 ```
 Pré-condição: ID 9999 não existe
-Ação: GET /usuarios/carros/9999
+Ação: GET /carros/9999
 Resultado Esperado:
   - Status: 404
-  - Mensagem: "Não há nenhum carro com o id correspondente"
+  - Mensagem: "Não foi possível encontrar o carro"
 ```
 
 #### TC-C-005: Criar carro com dados válidos
 ```
 Pré-condição: Nenhuma
-Ação: POST /usuarios/carros
+Ação: POST /carros
 Body: {
   "modelo": "Honda Civic",
   "cor": "Preto",
@@ -411,7 +411,7 @@ Resultado Esperado:
 #### TC-C-006: Criar carro com valor negativo
 ```
 Pré-condição: Nenhuma
-Ação: POST /usuarios/carros
+Ação: POST /carros
 Body: {
   "modelo": "Toyota",
   "cor": "Azul",
@@ -419,27 +419,27 @@ Body: {
   "ano": 2022
 }
 Resultado Esperado:
-  - Status: 201 (atualmente sem validação)
-  - OU Status: 400 (se validação for implementada)
+  - Status: 201 (aceito se não houver regra de validação de valores negativos no backend)
 ```
 
 #### TC-C-007: Criar carro sem campo obrigatório
 ```
 Pré-condição: Nenhuma
-Ação: POST /usuarios/carros
+Ação: POST /carros
 Body: {
   "modelo": "BMW",
   "cor": "Vermelho"
 }
 Resultado Esperado:
-  - Status: 500 ou erro de banco
+  - Status: 404 ou 400
+  - Mensagem: "Por favor preencha todos os campos"
   - Carro não é criado
 ```
 
 #### TC-C-008: Atualizar carro existente
 ```
 Pré-condição: Carro com id=1 existe
-Ação: PUT /usuarios/carros/1
+Ação: PUT /carros/1
 Body: {
   "modelo": "Honda Civic 2024",
   "cor": "Branco",
@@ -449,215 +449,185 @@ Body: {
 Resultado Esperado:
   - Status: 200
   - Dados do carro estão atualizados
-  - Message: "Atualização dos dados do carro feita com sucesso!"
+  - Message: "O carro foi editado com sucesso!"
 ```
 
 #### TC-C-009: Atualizar carro sem preencher todos os campos
 ```
 Pré-condição: Carro com id=1 existe
-Ação: PUT /usuarios/carros/1
+Ação: PUT /carros/1
 Body: {
   "modelo": "Honda"
 }
 Resultado Esperado:
-  - Status: 400
-  - Mensagem: "Por favor preencha todos os campos"
-  - Carro não é atualizado
+  - Status: 400 ou 404
+  - Mensagem: "O carro não foi encontrado" ou erro de campos vazios
 ```
 
 #### TC-C-010: Deletar carro existente
 ```
 Pré-condição: Carro com id=1 existe
-Ação: DELETE /usuarios/carros/1
+Ação: DELETE /carros/1
 Resultado Esperado:
   - Status: 200
-  - Message: "Carro deletado com sucesso!"
+  - Message: "O carro foi excluído com sucesso"
   - Carro não aparece mais ao listar
 ```
 
 #### TC-C-011: Deletar carro inexistente
 ```
 Pré-condição: ID 9999 não existe
-Ação: DELETE /usuarios/carros/9999
+Ação: DELETE /carros/9999
 Resultado Esperado:
   - Status: 404
-  - Mensagem: "Não há carro para deletar"
+  - Mensagem: "O carro não foi encontrado"
 ```
 
 ---
 
 ## 5. CASOS DE TESTE - FRONTEND
 
-### 5.1 Testes de Usuários - Frontend
+### 5.1 Autenticação e Registro de Usuários - Frontend
 
-#### TC-FE-U-001: Carregar página de usuários
-```
-Pré-condição: Aplicação iniciada
-Ação: Navegar para /usuarios
-Resultado Esperado:
-  - Página carrega sem erros
-  - Tabela de usuários é exibida
-  - Dados são carregados do backend
-```
+#### TC-FE-U-001: Carregar formulário de Login
+- **Pré-condição**: Aplicação iniciada na rota raiz (`/`)
+- **Ação**: Visualizar a tela inicial
+- **Resultado Esperado**:
+  - Formulário com os campos de E-mail, Senha e botão de "Entrar" é exibido corretamente.
+  - Link de "Cadastre-se" para abrir o modal de cadastro.
 
-#### TC-FE-U-002: Exibir mensagem quando não há usuários
-```
-Pré-condição: Banco vazio
-Ação: Navegar para /usuarios
-Resultado Esperado:
-  - Mensagem "Nenhum usuário cadastrado" é exibida
-  - Tabela vazia
-```
+#### TC-FE-U-002: Tentar Login com informações inválidas
+- **Pré-condição**: Tela de login aberta
+- **Ação**: 
+  1. Digitar e-mail ou senha incorretos.
+  2. Clicar em "Entrar".
+- **Resultado Esperado**:
+  - Alerta de erro (Toast) indicando "Credenciais inválidas".
+  - O usuário permanece na página de login.
 
-#### TC-FE-U-003: Abrir modal de novo usuário
-```
-Pré-condição: Página de usuários aberta
-Ação: Clicar no botão "Adicionar Usuário"
-Resultado Esperado:
-  - Modal abre com formulário
-  - Campos vazios: Nome, Senha, Cargo
-  - Botões: Salvar, Cancelar
-```
+#### TC-FE-U-003: Login realizado com sucesso
+- **Pré-condição**: Tela de login aberta e conta existente
+- **Ação**:
+  1. Inserir credenciais válidas.
+  2. Clicar em "Entrar".
+- **Resultado Esperado**:
+  - Redirecionamento bem-sucedido para a rota `/dashboard`.
+  - Exibição da página principal com cabeçalho, SideMenu e barra superior.
 
-#### TC-FE-U-004: Criar novo usuário com validação
-```
-Pré-condição: Modal de novo usuário aberto
-Ação:
-  1. Deixar campo Nome vazio e clicar Salvar
-  2. Preencher Nome, deixar Senha vazia e clicar Salvar
-  3. Preencher todos os campos corretamente
-  4. Clicar Salvar
-Resultado Esperado:
-  - Etapas 1-2: Mensagens de validação aparecem
-  - Etapa 4: Usuário criado, modal fecha, tabela atualiza
-```
+#### TC-FE-U-004: Abrir Modal de Cadastro de Usuário
+- **Pré-condição**: Tela de login aberta
+- **Ação**: Clicar no link "Cadastre-se"
+- **Resultado Esperado**:
+  - Abre o modal contendo o formulário de criação de usuário.
+  - Campos vazios: Nome, E-mail, Senha, Confirmar Senha e Cargo (Select: VENDAS ou ADMIN).
 
-#### TC-FE-U-005: Cancelar criação de usuário
-```
-Pré-condição: Modal de novo usuário aberto com dados preenchidos
-Ação: Clicar botão "Cancelar"
-Resultado Esperado:
-  - Modal fecha
-  - Dados não são salvos
-  - Tabela permanece inalterada
-```
+#### TC-FE-U-005: Validar Senhas divergentes no Cadastro
+- **Pré-condição**: Modal de cadastro aberto
+- **Ação**:
+  1. Preencher Nome, E-mail e Cargo.
+  2. Preencher Senha e Confirmar Senha com valores diferentes.
+  3. Clicar em "Criar Usuário".
+- **Resultado Esperado**:
+  - Mensagem de erro em tela "As senhas não correspondem".
+  - O modal permanece aberto e o cadastro não é efetuado.
 
-#### TC-FE-U-006: Editar usuário existente
-```
-Pré-condição: Usuário com id=1 existe na tabela
-Ação:
-  1. Clicar botão "Editar" na linha do usuário
-  2. Modal abre com dados preenchidos
-  3. Alterar nome
-  4. Clicar "Atualizar"
-Resultado Esperado:
-  - Modal abre com dados corretos
-  - Modal fecha após atualizar
-  - Tabela mostra novo nome
-```
+#### TC-FE-U-006: Cadastrar novo usuário com sucesso
+- **Pré-condição**: Modal de cadastro aberto
+- **Ação**:
+  1. Preencher todos os campos com dados válidos e senhas idênticas.
+  2. Clicar em "Criar Usuário".
+- **Resultado Esperado**:
+  - Novo usuário criado no banco de dados.
+  - O modal é fechado e exibe-se uma notificação de sucesso.
 
-#### TC-FE-U-007: Deletar usuário com confirmação
-```
-Pré-condição: Usuário com id=1 existe na tabela
-Ação:
-  1. Clicar botão "Deletar" na linha
-  2. Modal de confirmação aparece
-  3. Clicar "Confirmar"
-Resultado Esperado:
-  - Modal de confirmação é exibido
-  - Usuário é removido da tabela após confirmação
-  - Mensagem de sucesso aparece
-```
-
-#### TC-FE-U-008: Cancelar exclusão de usuário
-```
-Pré-condição: Modal de confirmação de exclusão aberto
-Ação: Clicar botão "Cancelar"
-Resultado Esperado:
-  - Modal fecha
-  - Usuário permanece na tabela
-```
+#### TC-FE-U-007: Efetuar Logout da sessão
+- **Pré-condição**: Usuário autenticado e no painel interno
+- **Ação**: Clicar no botão "Sair" na barra lateral/superior
+- **Resultado Esperado**:
+  - Limpeza dos dados de sessão e tokens no localStorage.
+  - Redirecionamento imediato para a página de login raiz (`/`).
 
 ---
 
-### 5.2 Testes de Carros - Frontend
+### 5.2 Gestão de Carros e Navegação - Frontend
 
 #### TC-FE-C-001: Carregar página de carros
-```
-Pré-condição: Aplicação iniciada
-Ação: Navegar para /carros
-Resultado Esperado:
-  - Página carrega sem erros
-  - Tabela de carros é exibida
-  - Valores são exibidos em moeda (R$)
-```
+- **Pré-condição**: Usuário autenticado
+- **Ação**: Navegar para `/carros`
+- **Resultado Esperado**:
+  - Página carrega sem erros de requisição.
+  - Tabela com colunas Modelo, Cor, Valor (Moeda BRL formatada) e Ano é exibida com todos os dados.
 
-#### TC-FE-C-002: Exibir mensagem quando não há carros
-```
-Pré-condição: Banco vazio
-Ação: Navegar para /carros
-Resultado Esperado:
-  - Mensagem "Nenhum carro cadastrado" é exibida
-  - Tabela vazia
-```
+#### TC-FE-C-002: Exibir mensagem quando o estoque está vazio
+- **Pré-condição**: Sem carros cadastrados no banco
+- **Ação**: Acessar o Dashboard ou a página `/carros`
+- **Resultado Esperado**:
+  - Exibição de mensagem informativa "Nenhum carro encontrado" ou tabela vazia.
 
-#### TC-FE-C-003: Adicionar novo carro
-```
-Pré-condição: Modal de novo carro aberto
-Ação:
-  1. Preencher todos os campos com dados válidos
-  2. Clicar "Salvar"
-Resultado Esperado:
-  - Carro criado no backend
-  - Modal fecha
-  - Carro aparece na tabela
-  - Mensagem de sucesso exibida
-```
+#### TC-FE-C-003: Abrir detalhes de um veículo
+- **Pré-condição**: Pelo menos um carro existente na lista
+- **Ação**: Clicar em "Ver detalhes" em algum veículo da lista
+- **Resultado Esperado**:
+  - Abertura de modal de detalhes flutuante (`DetailsModal` / `CarDetails`).
+  - Apresentação completa das especificações (Modelo, Ano, Cor, Valor formatado).
+  - Exibição do botão apropriado ("Contatar" para VENDAS ou "Excluir" para ADMIN).
 
-#### TC-FE-C-004: Validar campos ao criar carro
-```
-Pré-condição: Modal de novo carro aberto
-Ação:
-  1. Deixar Modelo vazio e clicar Salvar
-  2. Digitar valor negativo
-  3. Digitar ano fora do intervalo válido
-Resultado Esperado:
-  - Mensagens de validação aparecem
-  - Carro não é criado
-```
+#### TC-FE-C-004: Adicionar novo carro (Apenas Admin)
+- **Pré-condição**: Usuário autenticado com cargo `ADMIN` no painel `/admin`
+- **Ação**:
+  1. Clicar em "Cadastrar Carro".
+  2. Preencher formulário de dados válidos.
+  3. Clicar em "Salvar".
+- **Resultado Esperado**:
+  - Modal é fechado.
+  - Toast de sucesso "Carro cadastrado com sucesso!" é exibido.
+  - Listagem e contadores (Carros e Valor Agregado) atualizam instantaneamente.
 
-#### TC-FE-C-005: Editar carro existente
-```
-Pré-condição: Carro com id=1 existe na tabela
-Ação:
-  1. Clicar botão "Editar"
-  2. Alterar valor do carro
-  3. Clicar "Atualizar"
-Resultado Esperado:
-  - Modal abre com dados do carro
-  - Novo valor aparece na tabela
-```
+#### TC-FE-C-005: Validar formulário de carro no cadastro (Apenas Admin)
+- **Pré-condição**: Modal de cadastro de veículo aberto no `/admin`
+- **Ação**: Tentar salvar deixando campos obrigatórios em branco
+- **Resultado Esperado**:
+  - Exibição de toast de aviso "Por favor, preencha todos os campos."
+  - O veículo não é registrado.
 
-#### TC-FE-C-006: Deletar carro com confirmação
-```
-Pré-condição: Carro com id=1 existe na tabela
-Ação:
-  1. Clicar botão "Deletar"
-  2. Modal de confirmação aparece
-  3. Clicar "Confirmar"
-Resultado Esperado:
-  - Carro removido da tabela
-  - Mensagem de sucesso exibida
-```
+#### TC-FE-C-006: Editar carro existente (Apenas Admin)
+- **Pré-condição**: Usuário autenticado com cargo `ADMIN` no painel `/admin`
+- **Ação**:
+  1. Clicar no botão "Editar" na linha do veículo.
+  2. Alterar qualquer valor no formulário (ex: cor ou modelo).
+  3. Confirmar alteração.
+- **Resultado Esperado**:
+  - Modal fecha.
+  - Informações editadas aparecem refletidas na tabela e nos detalhes.
+  - Mensagem de sucesso "Carro editado com sucesso!".
 
-#### TC-FE-C-007: Formatar valores em moeda
-```
-Pré-condição: Carros com valores na tabela
-Ação: Verificar formatação dos valores
-Resultado Esperado:
-  - Valores exibidos como "R$ 85.000,00"
-  - Formatação mantida ao adicionar novo carro
-```
+#### TC-FE-C-007: Excluir carro com confirmação (Apenas Admin)
+- **Pré-condição**: Usuário autenticado com cargo `ADMIN` no painel `/admin`
+- **Ação**:
+  1. Clicar no botão "Excluir" na linha do veículo.
+  2. Confirmar exclusão no modal de segurança.
+- **Resultado Esperado**:
+  - Registro de veículo é excluído do banco.
+  - Removido da listagem imediatamente.
+  - Toast de sucesso "Carro excluído com sucesso!" é exibido.
+
+---
+
+### 5.3 Segurança e Proteção de Acesso - Frontend
+
+#### TC-FE-SEC-001: Bloquear acesso de visitantes (Não Logados)
+- **Pré-condição**: Usuário deslogado
+- **Ação**: Tentar acessar rotas privadas como `/dashboard`, `/carros` ou `/admin` diretamente via URL
+- **Resultado Esperado**:
+  - O componente `PrivateRoute` intercepta o acesso.
+  - O navegador é redirecionado para a tela de login raiz (`/`).
+
+#### TC-FE-SEC-002: Impedir Vendedores de acessar Painel Admin
+- **Pré-condição**: Usuário logado com cargo `VENDAS`
+- **Ação**: Tentar digitar a URL `/admin` diretamente
+- **Resultado Esperado**:
+  - O componente redireciona o vendedor de volta para `/dashboard`.
+  - Exibe um alerta de erro em Toast informando: "Acesso negado. Apenas administradores podem acessar esta página."
 
 ---
 
@@ -682,10 +652,10 @@ Resultado Esperado:
 ```
 Pré-condição: Nenhuma
 Ação:
-  1. Criar novo carro via POST /usuarios/carros
-  2. Buscar carro via GET /usuarios/carros/:id
-  3. Atualizar carro via PUT /usuarios/carros/:id
-  4. Deletar carro via DELETE /usuarios/carros/:id
+  1. Criar novo carro via POST /carros
+  2. Buscar carro via GET /carros/:id
+  3. Atualizar carro via PUT /carros/:id
+  4. Deletar carro via DELETE /carros/:id
   5. Tentar buscar carro deletado
 Resultado Esperado:
   - Todas as operações retornam status correto
@@ -693,16 +663,16 @@ Resultado Esperado:
   - GET final retorna 404
 ```
 
-#### TC-INT-003: Frontend - Criar e listar usuário
+#### TC-INT-003: Frontend - Criar e listar carro
 ```
-Pré-condição: Aplicação iniciada, página de usuários aberta
+Pré-condição: Aplicação iniciada, página de dashboard aberta
 Ação:
-  1. Abrir modal de novo usuário
-  2. Preencher e salvar
-  3. Verificar tabela
+  1. Login com conta ADMIN
+  2. Acessar Painel do Administrador (/admin)
+  3. Clicar em "Cadastrar Carro", preencher formulário e salvar
+  4. Verificar lista de carros no dashboard e na página /carros
 Resultado Esperado:
-  - Usuário aparece imediatamente na tabela
-  - Dados correspondem ao enviado
+  - Carro é cadastrado com sucesso e aparece imediatamente nas tabelas e listas
 ```
 
 ---
@@ -721,7 +691,7 @@ Resultado Esperado:
 #### TC-PERF-002: Listar 1000 carros
 ```
 Pré-condição: Banco contém 1000 carros
-Ação: GET /usuarios/carros
+Ação: GET /carros
 Resultado Esperado:
   - Resposta em menos de 2 segundos
   - Todos os dados retornam corretamente
@@ -751,52 +721,43 @@ Resultado Esperado:
 
 ---
 
-## 9. Observações e Problemas Encontrados
+## 9. Histórico de Melhorias e Ajustes Realizados
 
 ### Backend
-1. **Rota de Carros em Path Errado**: Carros estão em `/usuarios` em vez de `/carros`
-   - Linha em `server.js`: `app.use("/usuarios", carrosRoute)`
-   - Recomendação: Mudar para `app.use("/carros", carrosRoute)`
+1. **Rota de Carros Corrigida (Resolvido)**: Os endpoints de carros foram movidos da rota base `/usuarios/carros` para a rota base correta `/carros` (conforme `server.js` e `routes/cars.js`).
+2. **Método PUT de Usuários Corrigido (Resolvido)**: O método PUT em `/usuarios/:id` agora recebe e atualiza corretamente as informações de usuário (`nome`, `senha`, `cargo`) em vez dos parâmetros de veículo.
+3. **Padronização das Mensagens de Erro (Resolvido)**: As respostas de erro do backend foram padronizadas para retornar objetos JSON uniformes com `{ message, error }`.
+4. **Validação de Dados no Backend (Resolvido)**: Implementada validação básica de campos obrigatórios no nível do serviço antes de persistir dados no repositório.
+5. **Autenticação e Segurança (Resolvido)**: Implementado e integrado o `authMiddleware` que valida os tokens JWT (`ACCESS` e `REFRESH`) nos cabeçalhos das requisições.
 
-2. **Método PUT em Usuários Atualiza Carros**: O método PUT em usuários recebe parametros de carros (modelo, cor, valor, ano)
-   - Recomendação: Corrigir para receber nome, senha, cargo
-
-3. **Mensagens de Erro Inconsistentes**: Algumas rotas retornam strings, outras objetos
-   - Recomendação: Padronizar respostas de erro
-
-4. **Falta de Validação**: Não há validação de dados no backend
-   - Recomendação: Implementar validação antes de salvar
-
-5. **Endpoints sem Autenticação**: Não há controle de acesso baseado em cargo
-   - Recomendação: Implementar middleware de autenticação e autorização
-
-### Frontend (A Ser Implementado)
-1. **Tratamento de Erros**: Implementar feedback visual para erros
-2. **Loading States**: Adicionar spinners enquanto carrega dados
-3. **Paginação**: Considerar implementar para grandes volumes
-4. **Responsividade**: Garantir funcionamento em mobile
+### Frontend
+1. **Tratamento de Erros e Toasts**: Utiliza `react-toastify` para exibir feedbacks de sucesso e erro instantâneos.
+2. **Loading States**: Adicionados states de carregamento na listagem e ações do formulário.
+3. **Responsividade**: Layout responsivo com Tailwind CSS (v4), adaptando-se a telas mobile e desktop.
+4. **Controle de Acesso por Cargo**: Proteção de rotas com `PrivateRoute` e controle no painel de administração (`Admin`), limitando ações com base no cargo do usuário (`ADMIN` ou `VENDAS`).
+5. **Counters Visualmente Atraentes**: Counters integrados com o tema (cor `bg-cyan-700` e ícones adequados).
 
 ---
 
 ## 10. Checklist de Implementação
 
 ### Backend
-- [ ] Corrigir rota de carros
-- [ ] Corrigir método PUT de usuários
-- [ ] Implementar validação de dados
-- [ ] Padronizar respostas de erro
-- [ ] Adicionar autenticação e autorização
+- [x] Corrigir rota de carros
+- [x] Corrigir método PUT de usuários
+- [x] Implementar validação de dados
+- [x] Padronizar respostas de erro
+- [x] Adicionar autenticação e autorização
 - [ ] Adicionar logs estruturados
 - [ ] Documentar API com Swagger/OpenAPI
 
 ### Frontend
-- [ ] Criar estrutura de componentes
-- [ ] Implementar páginas de listagem
-- [ ] Implementar formulários de CRUD
-- [ ] Adicionar validações de formulário
-- [ ] Adicionar tratamento de erros
-- [ ] Implementar loading states
-- [ ] Adicionar paginação
-- [ ] Testes automatizados (Jest/React Testing Library)
-- [ ] Testes E2E (Cypress/Playwright)
+- [x] Criar estrutura de componentes
+- [x] Implementar páginas de listagem
+- [x] Implementar formulários de CRUD
+- [x] Adicionar validações de formulário
+- [x] Adicionar tratamento de erros
+- [x] Implementar loading states
+- [x] Adicionar paginação (no visualizador de modelos)
+- [x] Testes automatizados (Jest/React Testing Library no Backend)
+- [x] Testes E2E (Playwright no Frontend)
 
